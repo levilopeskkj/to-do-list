@@ -3,14 +3,26 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include "../headers/controler_header/utils.h"
 
-void str_to_lower(char *str) {
-    for (int i = 0; str[i]; i++)
-        str[i] = tolower((unsigned char) str[i]);
+// Função auxiliar para remover uma tarefa pelo ID
+int remover_tarefa_por_id(Tarefa* tasks, int* task_count, int id) {
+    for (int i = 0; i < *task_count; i++) {
+        if (tasks[i].id == id) {
+            // Desloca as tarefas restantes para preencher o espaço vazio
+            for (int j = i; j < *task_count - 1; j++) {
+                tasks[j] = tasks[j + 1];
+            }
+            (*task_count)--;
+            return 1; // Tarefa removida com sucesso
+        }
+    }
+    return 0; // Tarefa não encontrada
 }
 
-void buscar_tarefa(const Tarefa* tasks, int task_count) {
-    if (task_count == 0) {
+void buscar_tarefa(Tarefa* tasks, int* task_count_ptr) {
+    int task_count = *task_count_ptr;
+    if (task_count <= 0) {
         printf("Nenhuma tarefa disponível para buscar.\n");
         return;
     }
@@ -122,12 +134,31 @@ void buscar_tarefa(const Tarefa* tasks, int task_count) {
 
     printf("==========================================\n");
 
+    // Pergunta se o usuário deseja remover uma tarefa
+    if (found) {
+        printf("\nDeseja remover alguma tarefa? (s/n): ");
+        char resposta;
+        scanf(" %c", &resposta);
+        
+        if (tolower(resposta) == 's') {
+            int id_remover;
+            printf("Digite o ID da tarefa que deseja remover: ");
+            scanf("%d", &id_remover);
+            
+            if (remover_tarefa_por_id(tasks, task_count_ptr, id_remover)) {
+                printf("✅ Tarefa removida com sucesso!\n");
+            } else {
+                printf("❌ Tarefa não encontrada!\n");
+            }
+        }
+    }
+    
     // Confirmação antes de voltar ao menu
     printf("\nDeseja voltar ao menu principal? (s/n): ");
-    char resposta;
-    scanf(" %c", &resposta);
-    if (tolower(resposta) != 's') {
+    char resposta_menu;
+    scanf(" %c", &resposta_menu);
+    if (tolower(resposta_menu) != 's') {
         printf("\nRetornando ao menu de busca...\n");
-        buscar_tarefa(tasks, task_count);
-  }
+        buscar_tarefa(tasks, task_count_ptr);
+    }
 }

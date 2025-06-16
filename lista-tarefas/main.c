@@ -17,10 +17,7 @@
 #include "headers/controler_header/buscar_tarefa.h"
 
 #define MAX_TAREFAS 100
-#define MAX_DESCRIPTION 256 default:
-printf(" Op o inv lida! Escolha entre 1 e 8.\n");
-
-
+#define MAX_DESCRIPTION 256
 
 // Global variables
 Tarefa tasks[MAX_TAREFAS];
@@ -66,7 +63,7 @@ int main() {
                 alterar_tarefa(tasks, task_count); // Option 6 is Alterar tarefa
                 break;
             case '7':
-                buscar_tarefa(tasks, task_count); // Option 7 is Buscar tarefa
+                buscar_tarefa(tasks, &task_count); // Option 7 is Buscar tarefa
                 break;
             case '8':
                 printf(" Obrigado por usar o Todo List! At  logo!\n");
